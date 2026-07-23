@@ -550,6 +550,183 @@ input:checked + .slider:before {
     .coeff-row label {
         flex: 0 0 80px;
     }
+
+}
+/* ===== УВЕДОМЛЕНИЕ О КОПИРОВАНИИ ===== */
+.copy-toast {
+    position: fixed;
+    padding: 10px 20px;
+    background: #10b981;
+    color: white;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    z-index: 99999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+    pointer-events: none;
+    white-space: nowrap;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    transform: none;
+}
+
+.copy-toast.show {
+    opacity: 1;
+    visibility: visible;
+    animation: toastPopIn 0.3s ease-out forwards;
+}
+
+.copy-toast.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.copy-toast .toast-icon {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.copy-toast .toast-text {
+    display: inline-block;
+}
+
+.copy-toast::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #10b981;
+}
+
+@keyframes toastPopIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 600px) {
+    .copy-toast {
+        font-size: 12px;
+        padding: 8px 16px;
+        white-space: normal;
+        max-width: 200px;
+        text-align: center;
+    }
+}
+
+/* ===== КНОПКА КОПИРОВАНИЯ ===== */
+.copy-result-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #334155;
+    color: #94a3b8;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 12px;
+    vertical-align: middle;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.copy-result-btn:hover {
+    background: #2563eb;
+    color: white;
+    border-color: #2563eb;
+    box-shadow: 0 0 15px rgba(37, 99, 235, 0.3);
+    transform: scale(1.05);
+}
+
+.copy-result-btn:active {
+    transform: scale(0.95);
+}
+
+.copy-result-btn.copied {
+    background: #10b981;
+    color: white;
+    border-color: #10b981;
+}
+
+.copy-result-btn .btn-icon {
+    font-size: 14px;
+}
+
+/* Обёртка для суммы и кнопки */
+.result-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.result-wrapper .result-total {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+@media (max-width: 600px) {
+    .copy-result-btn {
+        font-size: 11px;
+        padding: 3px 10px;
+    }
+    .copy-result-btn .btn-icon {
+        font-size: 12px;
+    }
+}
+
+/* ===== ФИКС КНОПКИ КОПИРОВАНИЯ В АДДЕНДУМЕ ===== */
+#addendum-content .copy-result-btn {
+    width: auto !important;
+    background: #334155 !important;
+    color: #94a3b8 !important;
+    border: 1px solid #475569 !important;
+    padding: 4px 12px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    text-transform: none !important;
+    margin-top: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    min-width: auto !important;
+    max-width: none !important;
+    flex: none !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+#addendum-content .copy-result-btn:hover {
+    background: #2563eb !important;
+    color: white !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 0 15px rgba(37, 99, 235, 0.3) !important;
+    transform: scale(1.05) !important;
+}
+
+#addendum-content .copy-result-btn:active {
+    transform: scale(0.95) !important;
+}
+
+#addendum-content .copy-result-btn.copied {
+    background: #10b981 !important;
+    color: white !important;
+    border-color: #10b981 !important;
 }
     </style>
 </head>
@@ -809,20 +986,26 @@ input:checked + .slider:before {
 
 </div>
 
+
 <div class="result-section">
+    <div class="result-wrapper">
         <div class="result-total" id="result">0 ₽</div>
-        
-        <table class="coeff-table">
-            <tr><td class="coeff-name">Базовый тариф (БТ)</td><td class="coeff-value" id="val-bt">-</td></tr>
-            <tr><td class="coeff-name">Региональный (КТ)</td><td class="coeff-value" id="val-kt">-</td></tr>
-            <tr><td class="coeff-name">Бонус-малус (КБМ)</td><td class="coeff-value" id="val-kbm">-</td></tr>
-            <tr><td class="coeff-name">Возраст/стаж (КВС)</td><td class="coeff-value" id="val-kvs">-</td></tr>
-            <tr><td class="coeff-name">Ограничения (КО)</td><td class="coeff-value" id="val-ko">-</td></tr>
-            <tr><td class="coeff-name">Мощность (КМ)</td><td class="coeff-value" id="val-km">-</td></tr>
-            <tr><td class="coeff-name">Сезонность (КС)</td><td class="coeff-value" id="val-ks">-</td></tr>
-        </table>
+        <button class="copy-result-btn" id="copyOsagoBtn" onclick="copyResult('result', this)">
+            <span class="btn-icon">📋</span> Копировать
+        </button>
     </div>
+    <table class="coeff-table">
+        <tr><td class="coeff-name">Базовый тариф (БТ)</td><td class="coeff-value" id="val-bt">-</td></tr>
+        <tr><td class="coeff-name">Региональный (КТ)</td><td class="coeff-value" id="val-kt">-</td></tr>
+        <tr><td class="coeff-name">Бонус-малус (КБМ)</td><td class="coeff-value" id="val-kbm">-</td></tr>
+        <tr><td class="coeff-name">Возраст/стаж (КВС)</td><td class="coeff-value" id="val-kvs">-</td></tr>
+        <tr><td class="coeff-name">Ограничения (КО)</td><td class="coeff-value" id="val-ko">-</td></tr>
+        <tr><td class="coeff-name">Мощность (КМ)</td><td class="coeff-value" id="val-km">-</td></tr>
+        <tr><td class="coeff-name">Сезонность (КС)</td><td class="coeff-value" id="val-ks">-</td></tr>
+    </table>
 </div>
+
+    </div> <!-- закрытие main-container -->
 
 <!-- Авторство -->
 <div style="
@@ -970,31 +1153,35 @@ input:checked + .slider:before {
         <button onclick="calculate()">Рассчитать доплату</button>
     </div>
 
-    <div class="result-section">
-        <div id="result-label" class="result-label" style="text-align:center; color:#94a3b8; font-size:14px;">Сумма доплаты:</div>
-        <div class="result-total" id="result-due">0.00 ₽</div>
-		
-        
-        <table class="info-table">
-            <tr>
-                <td class="info-name">Оплачено ранее</td>
-                <td class="info-value" id="res-old">0.00 ₽</td>
-            </tr>
-            <tr>
-                <td class="info-name">Потрачено дней</td>
-                <td class="info-value" id="res-elapsed-days">0</td>
-            </tr>
-            <tr>
-                <td class="info-name">Осталось дней</td>
-                <td class="info-value" id="res-remain">0</td>
-            </tr>
-            <tr>
-                <td class="info-name">Новая полная цена</td>
-                <td class="info-value" id="res-new-full">0.00 ₽</td>
-            </tr>
-        </table>
-    </div>
+ <div class="result-section">
+            <div id="result-label" class="result-label" style="text-align:center; color:#94a3b8; font-size:14px;">Сумма доплаты:</div>
+            <div class="result-wrapper">
+    <div class="result-total" id="result-due">0.00 ₽</div>
+    <button class="copy-result-btn" id="copyAddendumBtn" onclick="copyResult('result-due', this)">
+        <span class="btn-icon">📋</span> Копировать
+    </button>
 </div>
+            <table class="info-table">
+                <tr>
+                    <td class="info-name">Оплачено ранее</td>
+                    <td class="info-value" id="res-old">0.00 ₽</td>
+                </tr>
+                <tr>
+                    <td class="info-name">Потрачено дней</td>
+                    <td class="info-value" id="res-elapsed-days">0</td>
+                </tr>
+                <tr>
+                    <td class="info-name">Осталось дней</td>
+                    <td class="info-value" id="res-remain">0</td>
+                </tr>
+                <tr>
+                    <td class="info-name">Новая полная цена</td>
+                    <td class="info-value" id="res-new-full">0.00 ₽</td>
+                </tr>
+            </table>
+        </div> <!-- закрытие result-section -->
+
+    </div> <!-- закрытие main-container -->
 
 <!-- Авторство -->
 <div style="
@@ -1046,34 +1233,39 @@ input:checked + .slider:before {
             </p>
         </div>
 
-        <div class="result-section">
-            <div class="result-label" style="text-align:center; color:#94a3b8; font-size:14px;">К возврату на карту:</div>
-            <div class="result-total" id="resTermRefund">0.00 ₽</div>
-            
-            <table class="info-table">
-                <tr>
-                    <td class="info-name">Использовано дней</td>
-                    <td class="info-value" id="resTermUsedDays">0</td>
-                </tr>
-                <tr>
-                    <td class="info-name">Сумма за использ. дни</td>
-                    <td class="info-value" id="resTermUsedPrice">0.00 ₽</td>
-                </tr>
-                <tr>
-                    <td class="info-name">Осталось дней</td>
-                    <td class="info-value" id="resTermRemainDays">0</td>
-                </tr>
-                <tr>
-                    <td class="info-name">Неиспользованная сумма</td>
-                    <td class="info-value" id="resTermRemainPrice">0.00 ₽</td>
-                </tr>
-                <tr style="border-top: 2px solid #475569;">
-                    <td class="info-name" style="color: #fbbf24;">Удержание 23% (РВД)</td>
-                    <td class="info-value" style="color: #fbbf24;" id="resTermTax">- 0.00 ₽</td>
-                </tr>
-            </table>
-        </div>
+<div class="result-section">
+    <div class="result-label" style="text-align:center; color:#94a3b8; font-size:14px;">К возврату на карту:</div>
+    <div class="result-wrapper">
+        <div class="result-total" id="resTermRefund">0.00 ₽</div>
+        <button class="copy-result-btn" id="copyTerminationBtn" onclick="copyResult('resTermRefund', this)">
+            <span class="btn-icon">📋</span> Копировать
+        </button>
     </div>
+    <table class="info-table">
+        <tr>
+            <td class="info-name">Использовано дней</td>
+            <td class="info-value" id="resTermUsedDays">0</td>
+        </tr>
+        <tr>
+            <td class="info-name">Сумма за использ. дни</td>
+            <td class="info-value" id="resTermUsedPrice">0.00 ₽</td>
+        </tr>
+        <tr>
+            <td class="info-name">Осталось дней</td>
+            <td class="info-value" id="resTermRemainDays">0</td>
+        </tr>
+        <tr>
+            <td class="info-name">Неиспользованная сумма</td>
+            <td class="info-value" id="resTermRemainPrice">0.00 ₽</td>
+        </tr>
+        <tr style="border-top: 2px solid #475569;">
+            <td class="info-name" style="color: #fbbf24;">Удержание 23% (РВД)</td>
+            <td class="info-value" style="color: #fbbf24;" id="resTermTax">- 0.00 ₽</td>
+        </tr>
+    </table>
+</div>
+
+    </div> <!-- закрытие main-container -->
 	<!-- Авторство -->
 <div style="
   max-width:1100px;
@@ -1091,6 +1283,131 @@ input:checked + .slider:before {
 </div>
 
     <script>
+
+// =============================================
+// ===== КОПИРОВАНИЕ СУММЫ ПО КНОПКЕ =====
+// =============================================
+
+let copyTimeout = null;
+
+/**
+ * Копирует результат в буфер обмена
+ * @param {string} elementId - ID элемента с суммой
+ * @param {HTMLElement} btn - Кнопка, на которую нажали
+ */
+function copyResult(elementId, btn) {
+    const element = document.getElementById(elementId);
+    if (!element) {
+        console.warn('Элемент не найден:', elementId);
+        return;
+    }
+    
+    const text = element.innerText.trim();
+    
+    // Проверяем, что текст не пустой
+    if (!text || text === '0 ₽' || text === '0.00 ₽' || text === '— ₽') {
+        showCopyFeedback(btn, 'Нет данных', '#f97316');
+        // Восстанавливаем кнопку через 1 секунду
+        setTimeout(() => {
+            if (btn.dataset.originalHtml) {
+                btn.style.background = '';
+                btn.style.color = '';
+                btn.style.borderColor = '';
+                btn.innerHTML = btn.dataset.originalHtml;
+                btn.classList.remove('copied');
+            }
+        }, 1000);
+        return;
+    }
+    
+    // Копируем в буфер обмена
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                showCopyFeedback(btn, '✅ Скопировано!', '#10b981');
+            })
+            .catch(() => {
+                fallbackCopyResult(text, btn);
+            });
+    } else {
+        fallbackCopyResult(text, btn);
+    }
+}
+
+/**
+ * Fallback для старых браузеров
+ */
+function fallbackCopyResult(text, btn) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-9999px';
+    textArea.style.top = '-9999px';
+    document.body.appendChild(textArea);
+    textArea.select();
+    
+    try {
+        const success = document.execCommand('copy');
+        if (success) {
+            showCopyFeedback(btn, '✅ Скопировано!', '#10b981');
+        } else {
+            showCopyFeedback(btn, '❌ Ошибка', '#f97316');
+        }
+    } catch (err) {
+        console.error('Не удалось скопировать:', err);
+        showCopyFeedback(btn, '❌ Ошибка', '#f97316');
+    }
+    document.body.removeChild(textArea);
+}
+
+/**
+ * Показывает обратную связь на кнопке
+ */
+function showCopyFeedback(btn, text, color) {
+    if (!btn) return;
+    
+    // Сохраняем оригинальный HTML при первом вызове
+    if (!btn.dataset.originalHtml) {
+        btn.dataset.originalHtml = btn.innerHTML;
+    }
+    
+    // Если текст "Нет данных" — показываем 0.5 секунды и возвращаем обратно
+    if (text === 'Нет данных') {
+        const originalHtml = btn.dataset.originalHtml;
+        btn.style.background = color;
+        btn.style.color = 'white';
+        btn.style.borderColor = color;
+        btn.innerHTML = text;
+        btn.classList.add('copied');
+        
+        clearTimeout(copyTimeout);
+        copyTimeout = setTimeout(() => {
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.style.borderColor = '';
+            btn.innerHTML = originalHtml;
+            btn.classList.remove('copied');
+        }, 800);
+        return;
+    }
+    
+    // Меняем кнопку для успешного копирования
+    btn.style.background = color;
+    btn.style.color = 'white';
+    btn.style.borderColor = color;
+    btn.innerHTML = text;
+    btn.classList.add('copied');
+    
+    // Возвращаем исходный вид через 2 секунды
+    clearTimeout(copyTimeout);
+    copyTimeout = setTimeout(() => {
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+        btn.innerHTML = btn.dataset.originalHtml;
+        btn.classList.remove('copied');
+    }, 2000);
+}
 	
 	// ===== ПЕРЕМЕННЫЕ ДЛЯ РУЧНОГО РЕЖИМА =====
 let manualOverridesActive = false;
@@ -1574,7 +1891,7 @@ const KT_MAP = {
     baseKT: null,
     cities: {
       "Владивосток": 1.36,
-      "Уссурийск, Артем, Находка, Спасск-Дальний, Арсеньев": 1,
+      "Арсеньев, Артем, Находка, Спасск-Дальний, Уссурийск": 1,
       "Прочие города и НП": 1
     }
   },
@@ -2300,7 +2617,7 @@ const KT_TRACTOR_MAP = {
     baseKT: null,
     cities: {
       "Владивосток": 1.0,
-      "Уссурийск, Артем, Находка, Спасск-Дальний, Арсеньев": 0.88,
+      "Арсеньев, Артем, Находка, Спасск-Дальний, Уссурийск": 0.88,
       "Прочие города и НП": 0.84
     }
   },
@@ -3150,6 +3467,7 @@ if (inputKW && inputHP) {
         }
     });
 }
+});
 
 // ===== МОДАЛЬНОЕ ОКНО РУЧНОГО РЕЖИМА =====
 const modal = document.getElementById('manualModal');
@@ -3198,10 +3516,10 @@ if(applyBtn) applyBtn.onclick = () => {
     manualOverridesActive = true;
     calcOSAGO();
     if(modal) modal.classList.remove('active');
-};
-});
+  };
 
-// Функции для калькулятора расторжения
+
+  // Функции для калькулятора расторжения
 function applyTerminationDateMask(input) {
     input.addEventListener('input', (e) => {
         let value = e.target.value.replace(/\D/g, '');
@@ -3264,14 +3582,6 @@ function calculateTermination() {
     document.getElementById('resTermRemainPrice').innerText = `${formatCur(remainPrice)} ₽`;
     document.getElementById('resTermTax').innerText = `- ${formatCur(tax)} ₽`;
 }
-
-// ТОЛЬКО ДИАГНОСТИКА (без перезаписи обработчика)
-console.log('=== ДИАГНОСТИКА РУЧНОГО РЕЖИМА ===');
-console.log('modal:', document.getElementById('manualModal'));
-console.log('openBtn:', document.getElementById('openManualBtn'));
-console.log('cancelBtn:', document.getElementById('cancelManualBtn'));
-console.log('applyBtn:', document.getElementById('applyManualBtn'));
-console.log('resetManualBtn:', document.getElementById('resetManualBtn'));
     </script>
 <!-- МОДАЛЬНОЕ ОКНО РУЧНОГО РЕЖИМА (ОСАГО) -->
 <div id="manualModal" class="modal-overlay">
